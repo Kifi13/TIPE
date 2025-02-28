@@ -1,0 +1,48 @@
+
+plt.legend()
+plt.grid()
+plt.show()
+
+#rendement : r = Pu/(Pf-Pp)
+deltaT=[59.8,46.6,57.1,63.8]
+Pp=[]
+for T in deltaT:
+    Pp.append(A*T)
+Pf=[48.5,36.8,44,50]
+Pu=[0.465,0.280,0.421,0.525]
+
+
+def rendement_théorique(Tf,Z):
+    n=10**3
+    Zpn = z
+    Tc=np.linspace(Tf,200+Tf,n)
+    r=np.zeros((n,1))
+    for i in range(n):
+        Tm=(Tc[i]+Tf)/2
+        r[i]=(Tc[i]-Tf)*(sqrt(1+Zpn*Tm)-1)/(Tc[i]*(sqrt(1+Zpn*Tm)+(Tf/Tc[i])))
+    return Tc,r
+
+Tf=273
+Zpn=[0.001,0.01,0.02,0.1,1,1000]
+
+for z in Zpn:
+    Tc,r=rendement_théorique(Tf,z)
+    plt.plot(Tc,r,label=f"Zpn = {z}")
+    
+#Zpn théorique de l'ordre de 0.01
+
+Rmes=[]
+Tcmes=[]   
+   
+for i in range(len(deltaT)):
+    Rmes.append(Pu[i]/(Pf[i]-Pp[i]))
+    Tcmes.append(Tf+deltaT[i])
+
+plt.xlabel("Tc (en K)")
+plt.ylabel("Rendement η")
+plt.title("Comparaison η théorique et mesuré")
+plt.scatter(Tcmes,Rmes,label="Mesures expérimentales",marker = '+')
+plt.grid()
+   
+plt.legend()
+
